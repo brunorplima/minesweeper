@@ -11,17 +11,39 @@ interface Props {
 }
 
 const Square: React.FC<Props> = props => {
+   const { location, mineLocations } = props;
 
-   const [hasMine, setHasMine]   = useState(false);
-   const [isOpen, setIsOpen]     = useState(false);
+   const [hasMine, setHasMine]         = useState(false);
+   const [minesAround, setMinesAround] = useState(0);
+   const [isOpen, setIsOpen]           = useState(false);
 
    useEffect(() => {
-      for (let i = 0; i < props.mineLocations.length; i++) {
-         if (JSON.stringify(props.mineLocations[i]) === JSON.stringify(props.location)) {
+      const squaresAroundWithMine: SquareLocation[] = [];
+      for (let i = 0; i < mineLocations.length; i++) {
+         const currentSquare = mineLocations[i];
+         if (JSON.stringify(currentSquare) === JSON.stringify(props.location)) {
             setHasMine(true);
          }
       }
-   }, [props.mineLocations]);
+      
+      for (let x = location.x - 1; x <= location.x + 1; x++) {
+         for (let y = location.y - 1; y <= location.y + 1; y++) {
+            if (x !== location.x || y !== location.y) {
+               const around = { x: x, y: y };
+               mineLocations.forEach(loc => {
+                  if (JSON.stringify(loc) === JSON.stringify(around))
+                     squaresAroundWithMine.push(around);
+               });
+            }
+         }
+      }
+      
+      if (isOpen) {
+         setMinesAround(squaresAroundWithMine.length);
+         console.log(squaresAroundWithMine);
+      }
+      // console.log(squaresAround.length)
+   }, [mineLocations, isOpen, props.location, location.x, location.y]);
 
    const hasMineStyle = {
       backgroundColor: 'red',
@@ -46,7 +68,8 @@ const Square: React.FC<Props> = props => {
          style={hasMine ? hasMineStyle : isOpen ? isOpenStyle : {}}
          onClick={clickSquareHandle}
       >
-         {props.location.x + ',' + props.location.y}
+         {!isOpen && location.x + ',' + location.y}
+         {isOpen && minesAround !== 0 && minesAround}
       </div>
    )
 }
