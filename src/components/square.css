@@ -1,0 +1,11 @@
+.square-container {
+   width: 30px;
+   height: 30px;
+   border-radius: .15rem;
+   background-color: #ccc;
+   border: 1px solid #555;
+   cursor: pointer;
+   margin: .5px;
+   font-size: 8pt;
+   user-select: none;
+}
