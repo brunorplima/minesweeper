@@ -8,4 +8,9 @@
    margin: .5px;
    font-size: 8pt;
    user-select: none;
+   transition: .4s;
+}
+
+.square-container:hover {
+   background-color: #aaa;
 }
