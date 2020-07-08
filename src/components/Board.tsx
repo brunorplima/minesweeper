@@ -8,20 +8,14 @@ const Board: React.FC<any> = props => {
       numberCols,
       mines, 
       mineLocations,
-      setMineLocations } = useContext(AppContext);
+      setMineLocations,
+      openSquares,
+      setOpenSquares
+   } = useContext(AppContext);
+
    const [isFirstClick, setIsFirstClick] = useState(true);
 
-   useEffect(() => {
-      // console.log('props.isFirstClick:', isFirstClick);
-      // console.log(typeof setMineLocations);
-      // console.log(mineLocations);
-      // setMineLocations([{x:3, y:12}, {x:10, y:7}, {x:8, y:4}]);
-   }, []);
-
-   useEffect(() => {
-      
-      console.log(isFirstClick);
-   });
+   useEffect(() => console.log(openSquares))
 
    function firstClickAction(location: SquareLocation) {
       setIsFirstClick(false);
@@ -55,6 +49,8 @@ const Board: React.FC<any> = props => {
                isFirstClick={isFirstClick}
                firstClickAction={firstClickAction}
                mineLocations={mineLocations}
+               openSquares={openSquares}
+               setOpenSquares={setOpenSquares}
             />
          );
       }
