@@ -7,34 +7,15 @@ import './App.css';
 
 const App = () => {
 
-   const [openSquares, setOpenSquares]       = useState([]);
-   const [numberRows, setNumberRows]         = useState(16);
-   const [numberCols, setNumberCols]         = useState(16);
-   const [mines, setMines]                   = useState(30);
+   const [numberRows, setNumberRows]         = useState(10);
+   const [numberCols, setNumberCols]         = useState(15);
+   const [mines, setMines]                   = useState(20);
    const [mineLocations, setMineLocations]   = useState([]);
-   
-   const populateBoardWithMine = (): void => {
-      const locations: Array<Object> = [];
-      for (let i = 0; i < mines; i++) {
-         const location = {
-            x: Math.floor(Math.random() * numberCols),
-            y: Math.floor(Math.random() * numberRows)
-         }
-         const validations: Array<boolean> = locations.map(loc => JSON.stringify(location) === JSON.stringify(loc));
-         if (validations.includes(true)) {
-            i--;
-            continue;
-         } else {
-            locations.push(location);
-         }
-      }
-      // setMineLocations(locations);
-   }
+   const [infoList, setInfoList]             = useState([]);
+   const [isGameOver, setIsGameOver]         = useState(false);
 
    return (
       <ContextProvider value={{
-         openSquares,
-         setOpenSquares,
          numberRows,
          setNumberRows,
          numberCols,
@@ -42,7 +23,11 @@ const App = () => {
          mines,
          setMines,
          mineLocations,
-         setMineLocations
+         setMineLocations,
+         infoList,
+         setInfoList,
+         isGameOver,
+         setIsGameOver
          }}>
          <div className="App d-flex justify-content-center align-items-center">
             <ContextConsumer>

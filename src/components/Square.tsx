@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { SquareLocation } from './AppContext'
+import React, { useState, useEffect, useContext, SyntheticEvent } from 'react';
+import { SquareLocation } from './AppContext';
+import AppContext, { InfoDetails } from './AppContext';
+import { TiFlag } from 'react-icons/ti'
+import { FaBomb } from 'react-icons/fa'
 
 import './square.css';
 
@@ -7,69 +10,242 @@ interface Props {
    location: SquareLocation
    isFirstClick: boolean,
    firstClickAction: Function,
-   mineLocations: Array<SquareLocation>
+   id: string,
+   getId: Function,
+   squaresAround: string[],
+   isInfoListFull: boolean,
+   setIsInfoListFull: Function
 }
 
 const Square: React.FC<Props> = props => {
-   const { location, mineLocations } = props;
+   const {
+      mineLocations,
+      infoList,
+      setInfoList,
+      numberCols,
+      numberRows,
+      isGameOver,
+      setIsGameOver
+   } = useContext(AppContext);
 
-   const [hasMine, setHasMine]         = useState(false);
+   const [isOpen, setIsOpen] = useState(false);
+   const [hasMine, setHasMine] = useState(false);
    const [minesAround, setMinesAround] = useState(0);
-   const [isOpen, setIsOpen]           = useState(false);
+   const [hasWarn, setHasWarn] = useState(false);
+   const [bombClicked, setBombClicked] = useState(false);
+   const [neighbourSquaresInfo, setNeighbourSquaresInfo] = useState<InfoDetails[]>([]);
+
+
 
    useEffect(() => {
-      const squaresAroundWithMine: SquareLocation[] = [];
-      for (let i = 0; i < mineLocations.length; i++) {
-         const currentSquare = mineLocations[i];
-         if (JSON.stringify(currentSquare) === JSON.stringify(props.location)) {
-            setHasMine(true);
+      const list = infoList;
+      const info = {
+         id: props.id,
+         isOpen,
+         setIsOpen,
+         hasBomb: hasMine,
+         openNeighbourSquare: () => {
+            if (!isOpen)
+               setIsOpen(true);
          }
       }
-      
-      for (let x = location.x - 1; x <= location.x + 1; x++) {
-         for (let y = location.y - 1; y <= location.y + 1; y++) {
-            if (x !== location.x || y !== location.y) {
-               const around = { x: x, y: y };
-               mineLocations.forEach(loc => {
-                  if (JSON.stringify(loc) === JSON.stringify(around))
-                     squaresAroundWithMine.push(around);
-               });
+      list.push(info);
+      setInfoList(list);
+   }, [hasMine, isOpen, props.id, setInfoList, infoList]);
+
+
+
+
+
+
+
+   useEffect(() => {
+      if (infoList.length === numberCols * numberRows) {
+         props.setIsInfoListFull(true);
+      }
+   }, [infoList, numberCols, numberRows, props]);
+
+
+
+
+
+
+   useEffect(() => {
+      if (props.isInfoListFull) {
+         const infos : InfoDetails[] = [];
+         infoList.forEach(inf => {
+            if (props.squaresAround.includes(inf.id))
+               infos.push(inf)
+         });
+         setNeighbourSquaresInfo(infos);
+      }
+   }, [props.isInfoListFull, infoList, props.squaresAround]);
+
+
+
+
+
+
+   useEffect(() => {
+      if (isOpen && !hasMine) {
+         neighbourSquaresInfo.forEach(inf => {
+            if (!inf.hasBomb && minesAround === 0) {
+               inf.openNeighbourSquare();
+            }
+         })
+      }
+   }, [isOpen, hasMine, minesAround, neighbourSquaresInfo]);
+
+
+
+
+
+
+
+   useEffect(() => {
+      mineLocations.forEach(loc => {
+         if (loc === props.id) setHasMine(true)
+      })
+
+      let minesCount = 0;
+      props.squaresAround.forEach(id => {
+         if (mineLocations.includes(id)) minesCount++;
+      });
+      setMinesAround(minesCount);
+   }, [mineLocations, props.id, props.squaresAround, infoList]);
+
+
+
+
+
+   useEffect(() => {
+      if (hasMine) setIsOpen(true);
+   }, [isGameOver]);
+   
+
+
+
+
+   
+
+   /**
+    * Square Click handle function
+    */
+   function clickSquareHandle() : void {
+      if (!isGameOver) {
+         if (props.isFirstClick)
+            props.firstClickAction(props.location, props.squaresAround)
+
+         if (!isOpen) {
+            setIsOpen(true);
+         }
+
+         if (hasMine) {
+            setIsGameOver(true);
+            setBombClicked(true);
+         }
+      }
+   }
+
+
+
+
+
+   /**
+    * Square Right-Click handle function
+    */
+   function rightClickSquareHandle(e: SyntheticEvent) : void {
+      e.preventDefault();
+      if (!isGameOver) {
+         if (!isOpen) setHasWarn(!hasWarn)
+      }
+   }
+
+
+
+
+
+
+   // Styles
+   function getStyle() {
+      let style = {
+         backgroundColor: '#ccc',
+         cursor: 'pointer',
+         color: 'black',
+         transition: '.6s'
+      };
+
+      if (isOpen) {
+         style.backgroundColor = 'white'
+         style.cursor = 'inherit'
+         if (!hasMine) {
+            switch(minesAround) {
+               case 1:
+                  style.color = '#0075A2'    // Celadon Blue
+                  break;
+               case 2:
+                  style.color = '#30B33F'    // Green Pantone
+                  break;
+               case 3:
+                  style.color = '#22223B'    // Space Cadet
+                  break;
+               case 4:
+                  style.color = '#E8C547'    // Maize Crayola
+                  break;
+               case 5:
+                  style.color = '#F26419'    // Safety Orange Blaze Orange
+                  break;
+               case 6:
+                  style.color = '#5B5941'    // Rifle Green (Gray color)
+                  break;
+               case 7:
+                  style.color = '#87B6A7'    // Green Sheen (light blue color)
+                  break;
+               case 8:
+                  style.color = '#B287A3'    // Opera Mauve
+                  break;
+               default:
+                  style.color = 'white';
+                  break;
             }
          }
+         if (isGameOver && hasMine) {
+            style.color = bombClicked ? 'white' : 'black'
+            style.backgroundColor = bombClicked ? '#c00' : '#ccc'
+            style.transition = '0'
+         }
+      }
+      else {
+         if (hasWarn) style.backgroundColor = 'yellow'
       }
       
-      if (isOpen) {
-         setMinesAround(squaresAroundWithMine.length);
-         console.log(squaresAroundWithMine);
-      }
-      // console.log(squaresAround.length)
-   }, [mineLocations, isOpen, props.location, location.x, location.y]);
-
-   const hasMineStyle = {
-      backgroundColor: 'red',
-      color: 'white'
+      return style
    }
 
-   const isOpenStyle = {
-      backgroundColor: 'white'
-   }
 
-   function clickSquareHandle(): void {
-      if(props.isFirstClick) {
-         props.firstClickAction(props.location);
 
-      }
-      setIsOpen(true);
-   }
 
+   
    return (
       <div 
          className='square-container d-flex justify-content-center align-items-center' 
-         style={hasMine ? hasMineStyle : isOpen ? isOpenStyle : {}}
+         style={getStyle()}
          onClick={clickSquareHandle}
+         onContextMenu={e => rightClickSquareHandle(e)}
       >
-         {!isOpen && location.x + ',' + location.y}
-         {isOpen && minesAround !== 0 && minesAround}
+         {
+            // props.id
+         }
+         {
+            isOpen && minesAround > 0 && !hasMine ?
+               minesAround :
+               isOpen && hasMine ? <FaBomb /> : null
+         }
+         {
+            !isOpen && hasWarn ?
+            <TiFlag /> :
+            null
+         }
       </div>
    )
 }

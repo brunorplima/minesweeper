@@ -5,22 +5,30 @@ export interface SquareLocation {
    y: number
 }
 
+export interface InfoDetails {
+   id: string,
+   isOpen: boolean,
+   setIsOpen: Function,
+   hasBomb: boolean,
+   openNeighbourSquare: Function
+}
+
 interface Context {
-   openSquares: Array<SquareLocation>,
-   setOpenSquares: Function,
    numberRows: number,
    setNumberRows: Function,
    numberCols: number,
    setNumberCols: Function,
    mines: number,
    setMines: Function,
-   mineLocations: Array<SquareLocation>,
-   setMineLocations: Function
+   mineLocations: Array<string>,
+   setMineLocations: Function,
+   infoList: Array<InfoDetails>,
+   setInfoList: Function,
+   isGameOver: boolean,
+   setIsGameOver: Function
 }
 
 const context: Context = {
-   openSquares: [],
-   setOpenSquares: () => {},
    numberRows: 0,
    setNumberRows: () => {},
    numberCols: 0,
@@ -28,7 +36,11 @@ const context: Context = {
    mines: 0,
    setMines: () => {},
    mineLocations: [],
-   setMineLocations: () => {}
+   setMineLocations: () => {},
+   infoList: [],
+   setInfoList: () => {},
+   isGameOver: false,
+   setIsGameOver: () => {}
 }
 
 const AppContext = createContext<Context>(context);
