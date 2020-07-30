@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Ranchers&display=swap');
+
+.main-menu-container {
+   color: white;
+}
+
+
+/* Game Name */
+.game-name {
+   padding: 1.5rem;
+   background-color: #222;
+}
+.game-name div {
+   font-size: 10pt;
+}
+.game-name h1 {
+   font-family: 'Ranchers', cursive;
+}
+
+
+/* Difficulty */
+.difficulty {
+   padding: 1.5rem;
+   background-color: #222;
+   margin-top: 1rem;
+}
+.difficulty:last-child {
+   margin-bottom: 0 !important;
+}

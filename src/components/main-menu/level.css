@@ -1,0 +1,23 @@
+.level-container {
+   background-color: #666;
+   border-radius: .25rem;
+   margin-bottom: 2rem;
+   cursor: pointer;
+   transition: .4s;
+}
+.level-container:hover {
+   transform: translateX(10px);
+}
+
+.level-img {
+   height: 3rem;
+}
+
+.level-description {
+   padding: .3rem 1rem;
+   border-radius: .25rem;
+}
+.level-description div {
+   justify-content: ;
+   font-size: 10pt;
+}

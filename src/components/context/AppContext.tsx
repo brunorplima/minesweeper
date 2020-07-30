@@ -24,6 +24,8 @@ interface Context {
    setMineLocations: Function,
    infoList: Array<InfoDetails>,
    setInfoList: Function,
+   isMainMenu: boolean,
+   setIsMainMenu: Function,
    isGameOver: boolean,
    setIsGameOver: Function
 }
@@ -39,6 +41,8 @@ const context: Context = {
    setMineLocations: () => {},
    infoList: [],
    setInfoList: () => {},
+   isMainMenu: true,
+   setIsMainMenu: () => {},
    isGameOver: false,
    setIsGameOver: () => {}
 }

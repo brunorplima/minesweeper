@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ContextProvider, ContextConsumer } from './components/AppContext';
-import Board from './components/Board';
+import { ContextProvider, ContextConsumer } from './components/context/AppContext';
+import Game from './components/Game';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -9,9 +9,10 @@ const App = () => {
 
    const [numberRows, setNumberRows]         = useState(10);
    const [numberCols, setNumberCols]         = useState(15);
-   const [mines, setMines]                   = useState(20);
+   const [mines, setMines]                   = useState(30);
    const [mineLocations, setMineLocations]   = useState([]);
    const [infoList, setInfoList]             = useState([]);
+   const [isMainMenu, setIsMainMenu]         = useState(true);
    const [isGameOver, setIsGameOver]         = useState(false);
 
    return (
@@ -26,20 +27,13 @@ const App = () => {
          setMineLocations,
          infoList,
          setInfoList,
+         isMainMenu,
+         setIsMainMenu,
          isGameOver,
          setIsGameOver
          }}>
-         <div className="App d-flex justify-content-center align-items-center">
-            <ContextConsumer>
-               {
-                  context => context && (
-                     <Board 
-                        numberRows={context.numberRows} 
-                        numberCols={context.numberCols}
-                     />
-                  )
-               }
-            </ContextConsumer>
+         <div className="App">
+            <Game />
          </div>
       </ContextProvider>
    );
