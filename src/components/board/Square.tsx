@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, SyntheticEvent } from 'react';
-import { SquareLocation } from './AppContext';
-import AppContext, { InfoDetails } from './AppContext';
+import AppContext, { InfoDetails, SquareLocation } from '../context/AppContext';
 import { TiFlag } from 'react-icons/ti'
 import { FaBomb } from 'react-icons/fa'
 
@@ -168,8 +167,9 @@ const Square: React.FC<Props> = props => {
 
    // Styles
    function getStyle() {
+      let defaultBg = '#77A4F8'
       let style = {
-         backgroundColor: '#ccc',
+         backgroundColor: defaultBg,
          cursor: 'pointer',
          color: 'black',
          transition: '.6s'
@@ -187,10 +187,10 @@ const Square: React.FC<Props> = props => {
                   style.color = '#30B33F'    // Green Pantone
                   break;
                case 3:
-                  style.color = '#22223B'    // Space Cadet
+                  style.color = '#DD1100' //'#C8A527'    // Space Cadet
                   break;
                case 4:
-                  style.color = '#E8C547'    // Maize Crayola
+                  style.color = '#a31a73'    // Maize Crayola
                   break;
                case 5:
                   style.color = '#F26419'    // Safety Orange Blaze Orange
@@ -202,7 +202,7 @@ const Square: React.FC<Props> = props => {
                   style.color = '#87B6A7'    // Green Sheen (light blue color)
                   break;
                case 8:
-                  style.color = '#B287A3'    // Opera Mauve
+                  style.color = '#0035B2'    // Opera Mauve
                   break;
                default:
                   style.color = 'white';
@@ -211,7 +211,7 @@ const Square: React.FC<Props> = props => {
          }
          if (isGameOver && hasMine) {
             style.color = bombClicked ? 'white' : 'black'
-            style.backgroundColor = bombClicked ? '#c00' : '#ccc'
+            style.backgroundColor = bombClicked ? '#c00' : defaultBg
             style.transition = '0'
          }
       }

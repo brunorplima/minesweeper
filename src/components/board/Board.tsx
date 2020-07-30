@@ -1,5 +1,5 @@
 import React, { useState, useContext, ReactElement } from 'react';
-import AppContext, { ContextConsumer, SquareLocation } from './AppContext';
+import AppContext, { ContextConsumer, SquareLocation } from '../context/AppContext';
 import Square from './Square';
 
 const Board: React.FC<any> = props => {
@@ -104,7 +104,7 @@ const Board: React.FC<any> = props => {
     */
    function buildRow(colNumber: number): Array<ReactElement> {
       const row: Array<ReactElement> = [];
-      for (let x = 0; x < props.numberRows; x++) {
+      for (let x = 0; x < numberRows; x++) {
          const location = { x, y: colNumber };
          row.push(
             <Square
@@ -130,7 +130,7 @@ const Board: React.FC<any> = props => {
     */
    function buildBoard(): Array<Array<ReactElement>> {
       const rows: Array<Array<ReactElement>> = [];
-      for (let i = 0; i <props.numberCols; i++) {
+      for (let i = 0; i < numberCols; i++) {
          rows.push(buildRow(i));
       }
 
