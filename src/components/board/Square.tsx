@@ -131,7 +131,7 @@ const Square: React.FC<Props> = props => {
     * Square Click handle function
     */
    function clickSquareHandle() : void {
-      if (!isGameOver) {
+      if (!isGameOver && !hasWarn) {
          if (props.isFirstClick)
             props.firstClickAction(props.location, props.squaresAround)
 

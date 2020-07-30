@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.top-menu {
+   font-family: 'Press Start 2P', cursive;
+   margin-bottom: .5rem;
+   position: relative;
+}
+
+
+
+.game-over-window {
+   padding: 1rem;
+   background-color: rgba(68, 68, 68, 0.85);
+   position: absolute;
+   color: white;
+   text-align: center;
+}
+.game-over-options {
+   margin-top: 1rem;
+}
+
+
+
+.top-menu .clock {
+   padding: .3rem;
+   border-radius: .4rem;
+   background-color: black;
+   color: white;
+}

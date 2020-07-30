@@ -10,8 +10,6 @@ const Board: React.FC<any> = props => {
       setMineLocations
    } = useContext(AppContext);
 
-   const [isFirstClick, setIsFirstClick] = useState(true);
-   const [isInfoListFull, setIsInfoListFull] = useState(false);
 
 
 
@@ -55,7 +53,7 @@ const Board: React.FC<any> = props => {
     * @param squaresAround 
     */
    function firstClickAction(location: SquareLocation, squaresAround: string[]) {
-      setIsFirstClick(false);
+      props.setIsFirstClick(false);
       const newMineLocations = spreadMinesOnBoard(location, squaresAround)
       // console.log(newMineLocations)
       setMineLocations(newMineLocations);
@@ -113,10 +111,10 @@ const Board: React.FC<any> = props => {
                squaresAround={getSurroundingSquareIds(location.x, location.y)}
                id={getId(location.x, location.y)}
                location={location}
-               isFirstClick={isFirstClick}
+               isFirstClick={props.isFirstClick}
                firstClickAction={firstClickAction}
-               isInfoListFull={isInfoListFull}
-               setIsInfoListFull={setIsInfoListFull}
+               isInfoListFull={props.isInfoListFull}
+               setIsInfoListFull={props.setIsInfoListFull}
             />
          );
       }

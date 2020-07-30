@@ -57,7 +57,7 @@ const MainMenu: React.FC<Props> = props => {
 
 
 
-   const levels = ['Easy', 'Medium', 'Expert', 'Custom']
+   const levels = ['Easy', 'Medium', 'Expert']
 
    return (
       <div className='main-menu-container'>

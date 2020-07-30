@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import AppContext from './context/AppContext'
-import Board from './board/Board'
+import BoardView from './board-view/BoardView'
 import MainMenu from './main-menu/MainMenu'
 
 import './game.css'
@@ -16,7 +16,7 @@ const Game = () => {
          {
             isMainMenu ?
                <MainMenu/> :
-               <Board />
+               <BoardView />
          }
       </div>
    )
