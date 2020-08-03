@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ContextProvider, ContextConsumer } from './components/context/AppContext';
+import { ContextProvider } from './components/context/AppContext';
 import Game from './components/Game';
 
 import 'bootstrap/dist/css/bootstrap.min.css';

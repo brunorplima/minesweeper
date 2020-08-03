@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useContext, SyntheticEvent } from 'react';
+import React, { useState, useEffect, useContext, SyntheticEvent, Dispatch, SetStateAction } from 'react';
 import AppContext, { InfoDetails, SquareLocation } from '../context/AppContext';
 import { TiFlag } from 'react-icons/ti'
 import { FaBomb } from 'react-icons/fa'
+// import Repeatable from 'react-repeatable';
 
 import './square.css';
+import { isNull } from 'util';
 
 interface Props {
    location: SquareLocation
@@ -13,7 +15,10 @@ interface Props {
    getId: Function,
    squaresAround: string[],
    isInfoListFull: boolean,
-   setIsInfoListFull: Function
+   setIsInfoListFull: Dispatch<SetStateAction<boolean>>,
+   openSquares: number | null,
+   setOpenSquares: Dispatch<SetStateAction<number | null>>
+   setWarnSquares: Dispatch<SetStateAction<number>>
 }
 
 const Square: React.FC<Props> = props => {
@@ -28,6 +33,7 @@ const Square: React.FC<Props> = props => {
    } = useContext(AppContext);
 
    const [isOpen, setIsOpen] = useState(false);
+   const [openedAdded, setOpenedAdded] = useState(false);
    const [hasMine, setHasMine] = useState(false);
    const [minesAround, setMinesAround] = useState(0);
    const [hasWarn, setHasWarn] = useState(false);
@@ -98,6 +104,21 @@ const Square: React.FC<Props> = props => {
 
 
 
+   // useEffect(() => {
+   //    if (!isNull(props.openSquares)) {
+   //       if (props.openSquares === 120) console.log(props.openSquares)
+   //       if (props.openSquares === 0) {
+   //          setIsGameOver(true);
+   //       }
+
+   //       if (isOpen && !openedAdded) {
+   //          const free = props.openSquares - 1;
+   //          props.setOpenSquares(free);
+   //          setOpenedAdded(true);
+   //       }
+   //    }
+   // }, [props.openSquares, isOpen, props.setOpenSquares, setIsGameOver, openedAdded]);
+
 
 
 
@@ -118,8 +139,18 @@ const Square: React.FC<Props> = props => {
 
 
    useEffect(() => {
-      if (hasMine) setIsOpen(true);
-   }, [isGameOver]);
+      if (hasMine && isGameOver) setIsOpen(true);
+   }, [isGameOver, hasMine]);
+
+
+
+
+   useEffect(() => {
+      if (!props.isFirstClick) {
+         if (hasWarn) props.setWarnSquares(prevState => prevState + 1)
+         else props.setWarnSquares(prevState => prevState - 1)
+      }
+   }, [hasWarn]);
    
 
 
@@ -155,7 +186,7 @@ const Square: React.FC<Props> = props => {
     */
    function rightClickSquareHandle(e: SyntheticEvent) : void {
       e.preventDefault();
-      if (!isGameOver) {
+      if (!isGameOver && !props.isFirstClick) {
          if (!isOpen) setHasWarn(!hasWarn)
       }
    }
@@ -233,9 +264,6 @@ const Square: React.FC<Props> = props => {
          onClick={clickSquareHandle}
          onContextMenu={e => rightClickSquareHandle(e)}
       >
-         {
-            // props.id
-         }
          {
             isOpen && minesAround > 0 && !hasMine ?
                minesAround :

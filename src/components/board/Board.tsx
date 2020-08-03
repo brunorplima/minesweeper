@@ -1,16 +1,18 @@
-import React, { useState, useContext, ReactElement } from 'react';
+import React, { useEffect, useContext, ReactElement, useState } from 'react';
 import AppContext, { ContextConsumer, SquareLocation } from '../context/AppContext';
 import Square from './Square';
+import { isNull } from 'util';
 
 const Board: React.FC<any> = props => {
    const {
       numberRows,
       numberCols,
       mines, 
+      infoList,
       setMineLocations
    } = useContext(AppContext);
 
-
+   const [openSquares, setOpenSquares] = useState<number | null>(null);
 
 
    /**
@@ -55,7 +57,6 @@ const Board: React.FC<any> = props => {
    function firstClickAction(location: SquareLocation, squaresAround: string[]) {
       props.setIsFirstClick(false);
       const newMineLocations = spreadMinesOnBoard(location, squaresAround)
-      // console.log(newMineLocations)
       setMineLocations(newMineLocations);
    }
 
@@ -90,7 +91,6 @@ const Board: React.FC<any> = props => {
             i--;
          }
       }
-      // console.log(locations)
       return locations;
    }
 
@@ -104,17 +104,21 @@ const Board: React.FC<any> = props => {
       const row: Array<ReactElement> = [];
       for (let x = 0; x < numberRows; x++) {
          const location = { x, y: colNumber };
+         const id = getId(location.x, location.y);
          row.push(
             <Square
-               key={getId(location.x, location.y)}
+               key={id}
                getId={getId}
                squaresAround={getSurroundingSquareIds(location.x, location.y)}
-               id={getId(location.x, location.y)}
+               id={id}
                location={location}
                isFirstClick={props.isFirstClick}
                firstClickAction={firstClickAction}
                isInfoListFull={props.isInfoListFull}
                setIsInfoListFull={props.setIsInfoListFull}
+               openSquares={openSquares}
+               setOpenSquares={setOpenSquares}
+               setWarnSquares={props.setWarnSquares}
             />
          );
       }
@@ -131,7 +135,7 @@ const Board: React.FC<any> = props => {
       for (let i = 0; i < numberCols; i++) {
          rows.push(buildRow(i));
       }
-
+      if (isNull(openSquares)) setOpenSquares(numberRows * numberCols - mines);
       return rows;
    }
 

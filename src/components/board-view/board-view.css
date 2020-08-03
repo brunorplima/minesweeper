@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 .top-menu {
-   font-family: 'Press Start 2P', cursive;
    margin-bottom: .5rem;
    position: relative;
 }
@@ -22,8 +21,20 @@
 
 
 .top-menu .clock {
+   font-family: 'Press Start 2P', cursive;
    padding: .3rem;
    border-radius: .4rem;
    background-color: black;
    color: white;
+}
+
+.top-menu .remaining-bombs {
+   background-color: white;
+   border-radius: .4rem;
+   padding: .3rem;
+}
+
+
+.bottom-menu {
+   margin-top: .5rem;
 }

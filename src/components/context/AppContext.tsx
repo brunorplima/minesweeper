@@ -53,8 +53,4 @@ export const ContextProvider = AppContext.Provider;
 
 export const ContextConsumer = AppContext.Consumer;
 
-export const resetContext = () => {
-   
-}
-
 export default AppContext;

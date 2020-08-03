@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext, SyntheticEvent } from 'react'
 import Board from '../board/Board'
 import AppContext from '../context/AppContext'
+import { FaBomb } from 'react-icons/fa'
 
 import './board-view.css'
-import { isFunction } from 'util'
-import { isMainThread } from 'worker_threads'
 
 const BoardView = () => {
 
@@ -14,7 +13,8 @@ const BoardView = () => {
       isMainMenu,
       setIsMainMenu,
       setMineLocations,
-      setInfoList
+      setInfoList,
+      mines
    } = useContext(AppContext);
 
    const [seconds, setSeconds] = useState(0);
@@ -22,10 +22,13 @@ const BoardView = () => {
    const [isFirstClick, setIsFirstClick] = useState(true);
    const [renewGame, setRenewGame] = useState(false);
    const [isInfoListFull, setIsInfoListFull] = useState(false);
+   const [warnSquares, setWarnSquares] = useState(0);
+
+   let timeout: ReturnType<typeof setTimeout>;
 
    useEffect(() => {
       if (!isGameOver && !isFirstClick) {
-         const interval = setTimeout(() => {
+         timeout = setTimeout(() => {
             if (seconds !== 59) {
                setSeconds(seconds + 1);
             }
@@ -34,6 +37,9 @@ const BoardView = () => {
                setMinutes(minutes + 1)
             }
          }, 1000);
+      }
+      if (isGameOver) {
+         clearTimeout(timeout);
       }
    }, [seconds, minutes, isGameOver, isFirstClick]);
 
@@ -50,28 +56,30 @@ const BoardView = () => {
       return `${min}:${sec}`;
    }
 
-
-   function setNewGame(e: SyntheticEvent) {
-      e.preventDefault();
+   function resetState() {
       setIsGameOver(false);
       setIsFirstClick(true);
       setIsInfoListFull(false);
+      setMineLocations([]);
+      setInfoList([]);
+      setWarnSquares(0);
+   }
+
+
+   function setNewGame(e: SyntheticEvent) {
+      e.preventDefault();
+      resetState();
       setRenewGame(true);
       setMinutes(0);
       setSeconds(0);
-      setMineLocations([]);
-      setInfoList([]);
+      clearTimeout(timeout);
    }
 
 
    function goToMainMenu(e: SyntheticEvent) {
       e.preventDefault();
-      setIsGameOver(false);
-      setIsFirstClick(true);
-      setIsInfoListFull(false);
+      resetState();
       setIsMainMenu(true);
-      setMineLocations([]);
-      setInfoList([]);
    }
 
 
@@ -84,7 +92,7 @@ const BoardView = () => {
                   <div>Time: {getTime()}</div>
                   <div className='game-over-options'>
                      <button 
-                        className='btn btn-secondary'
+                        className='btn btn-primary'
                         onClick={e => setNewGame(e)}
                      >
                         New Game
@@ -93,7 +101,7 @@ const BoardView = () => {
                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                      <button 
-                        className='btn btn-secondary'
+                        className='btn btn-light'
                         onClick={e => goToMainMenu(e)}
                      >
                         Main Menu
@@ -102,11 +110,22 @@ const BoardView = () => {
                </div> :
                null
          }
-         <div className='top-menu d-flex justify-content-center'>
+         <div className='top-menu d-flex justify-content-between w-100'>
+            <div className='remaining-bombs d-flex align-items-center'>
+               <FaBomb />
+               &nbsp;
+               {mines - warnSquares >= 0 ? mines - warnSquares : '--'}
+            </div>
+
             <div className='clock'>
                {getTime()}
             </div>
+
+            {/* <div>
+               {mines - warnSquares >= 0 ? mines - warnSquares : '--'}
+            </div> */}
          </div>
+         
          {
             !renewGame ? 
             <Board 
@@ -114,9 +133,28 @@ const BoardView = () => {
                setIsFirstClick={setIsFirstClick}
                isInfoListFull={isInfoListFull}
                setIsInfoListFull={setIsInfoListFull}
+               setWarnSquares={setWarnSquares}
             /> : 
             null
          }
+
+         <div className='bottom-menu w-100 d-flex justify-content-around'>
+            <button 
+               className='btn btn-primary'
+               onClick={e => setNewGame(e)}
+               disabled={isGameOver || isFirstClick}
+            >
+               New Game
+            </button>
+
+            <button 
+               className='btn btn-light'
+               onClick={e => goToMainMenu(e)}
+               disabled={isGameOver}
+            >
+               Main Menu
+            </button>
+         </div>
       </div>
    )
 }

@@ -49,7 +49,7 @@ const MainMenu: React.FC<Props> = props => {
          if (!windowSize.width || !windowSize.height) handleResize();
 
          return () => window.removeEventListener('resize', handleResize);
-      }, []);
+      }, [windowSize.height, windowSize.width]);
 
       return windowSize;
    }
