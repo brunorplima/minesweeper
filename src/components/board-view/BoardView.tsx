@@ -24,6 +24,7 @@ const BoardView = () => {
    const [renewGame, setRenewGame] = useState(false);
    const [isInfoListFull, setIsInfoListFull] = useState(false);
    const [warnSquares, setWarnSquares] = useState(0);
+   const [openConfirm, setOpenConfirm] = useState({isIt: false, type: ''});
    const [openHelp, setOpenHelp] = useState(false);
 
    const timeout = useRef(setTimeout(() => '', 1));
@@ -91,6 +92,38 @@ const BoardView = () => {
    }
 
 
+   function openEndGameConfirmationWindow(e: SyntheticEvent, button: string) {
+      if (isFirstClick) goToMainMenu(e);
+      
+      else {
+         const confirm = {
+            isIt: true,
+            type: button
+         }
+         setOpenConfirm(confirm);
+      }
+   }
+
+   function endGameButtonClick(e: SyntheticEvent, button: string) {
+      if (button) {
+         if (openConfirm.type === 'mainMenu') goToMainMenu(e);
+         else setNewGame(e);
+      }
+      const confirm = {
+         isIt: false,
+         type: ''
+      }
+      setOpenConfirm(confirm);
+   }
+
+
+   function helpButtonClick() {
+      if (!isGameOver.isIt) {
+         setOpenHelp(true)
+      }
+   }
+
+
    return (
       <div className='d-flex flex-column justify-content-center align-items-center'>
          {
@@ -141,6 +174,19 @@ const BoardView = () => {
                </div> :
                null
          }
+
+         {
+            openConfirm.isIt &&
+               <div className='end-game-confirmation'>
+                  <div>Your progress will be lost</div>
+                  <div>Proceed?</div>
+                  <div className='egc-buttons w-100 d-flex justify-content-around'>
+                     <button className='btn btn-warning' onClick={e => endGameButtonClick(e, 'yes')}>Yes</button>
+                     <button className='btn btn-light' onClick={e => endGameButtonClick(e, '')}>Cancel</button>
+                  </div>
+               </div>
+         }
+
          <div className='top-menu d-flex justify-content-between w-100'>
             <div className='remaining-bombs d-flex align-items-center'>
                <FaBomb />
@@ -152,7 +198,7 @@ const BoardView = () => {
                {getTime()}
             </div>
 
-            <div className='help d-flex align-items-center' onClick={e => setOpenHelp(true)}>
+            <div className='help d-flex align-items-center' onClick={helpButtonClick}>
                Help
             </div>
          </div>
@@ -173,7 +219,7 @@ const BoardView = () => {
          <div className='bottom-menu w-100 d-flex justify-content-around'>
             <button 
                className='btn btn-primary'
-               onClick={e => setNewGame(e)}
+               onClick={e => openEndGameConfirmationWindow(e, 'newGame')}
                disabled={isGameOver.isIt || isFirstClick}
             >
                New Game
@@ -181,7 +227,7 @@ const BoardView = () => {
 
             <button 
                className='btn btn-light'
-               onClick={e => goToMainMenu(e)}
+               onClick={e => openEndGameConfirmationWindow(e, 'mainMenu')}
                disabled={isGameOver.isIt}
             >
                Main Menu

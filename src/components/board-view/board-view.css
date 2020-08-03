@@ -70,6 +70,20 @@
 }
 
 
+.end-game-confirmation {
+   padding: 1rem;
+   background-color: rgba(68, 68, 68, 0.85);
+   position: absolute;
+   color: white;
+   text-align: center;
+}
+.egc-buttons {
+   margin-top: 1rem;
+}
+.egc-buttons button {
+   width: 75px;
+}
+
 .bottom-menu {
    margin-top: .5rem;
 }
