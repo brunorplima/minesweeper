@@ -162,8 +162,6 @@ const Board: React.FC<any> = props => {
       return rows;
    }
 
-   console.log(props.openSquares.current)
-
    return (
       <div>
          <ContextConsumer>

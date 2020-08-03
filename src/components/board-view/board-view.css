@@ -34,6 +34,41 @@
    padding: .3rem;
 }
 
+.help-window {
+   padding: 2rem 1rem 1rem;
+   background-color: white;
+   z-index: 2;
+   position: absolute;
+   max-width: 20rem;
+   font-size: .9rem;
+   height: 555px;
+}
+.hw-mobile, .hw-desktop {
+   margin-bottom: 1rem;
+   padding: .5rem;
+   border-radius: .25rem;
+}
+.hw-mobile {
+   border: 1px solid #0075A2;
+}
+.hw-desktop {
+   border: 1px solid #30B33F;
+}
+.close-window {
+   position: absolute;
+   top: -.2rem;
+   right: .5rem;
+   cursor: pointer;
+   font-size: 1.7rem;
+}
+
+.top-menu .help {
+   background-color: white;
+   padding: .3rem;
+   border-radius: .4rem;
+   cursor: pointer;
+}
+
 
 .bottom-menu {
    margin-top: .5rem;
