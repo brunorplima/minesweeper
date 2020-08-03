@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, ReactElement, useState } from 'react';
 import AppContext, { ContextConsumer, SquareLocation, WindowSize } from '../context/AppContext';
 import Square from './Square';
-import { isNull } from 'util';
 
 const Board: React.FC<any> = props => {
    const {

@@ -2,10 +2,8 @@ import React, { useState, useEffect, useContext, SyntheticEvent, Dispatch, SetSt
 import AppContext, { InfoDetails, SquareLocation, WindowSize } from '../context/AppContext';
 import { TiFlag } from 'react-icons/ti'
 import { FaBomb } from 'react-icons/fa'
-// import Repeatable from 'react-repeatable';
 
 import './square.css';
-import { isNull } from 'util';
 
 interface Props {
    location: SquareLocation
