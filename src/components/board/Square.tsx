@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext, SyntheticEvent, Dispatch, SetStateAction } from 'react';
-import AppContext, { InfoDetails, SquareLocation } from '../context/AppContext';
+import React, { useState, useEffect, useContext, SyntheticEvent, Dispatch, SetStateAction, useRef } from 'react';
+import AppContext, { InfoDetails, SquareLocation, WindowSize } from '../context/AppContext';
 import { TiFlag } from 'react-icons/ti'
 import { FaBomb } from 'react-icons/fa'
 // import Repeatable from 'react-repeatable';
@@ -17,8 +17,8 @@ interface Props {
    isInfoListFull: boolean,
    setIsInfoListFull: Dispatch<SetStateAction<boolean>>,
    openSquares: React.MutableRefObject<number>,
-   // setOpenSquares: Dispatch<SetStateAction<number | null>>
    setWarnSquares: Dispatch<SetStateAction<number>>
+   screenSize: WindowSize
 }
 
 const Square: React.FC<Props> = props => {
@@ -214,6 +214,25 @@ const Square: React.FC<Props> = props => {
 
 
 
+   const isTouchEnded = useRef(false);
+   const touchTimeout = useRef(setTimeout(() => '', 1));
+   function touchStartHandle(e: SyntheticEvent) : void {
+      e.preventDefault();
+      touchTimeout.current = setTimeout(() => {
+         isTouchEnded.current = true;
+      }, 500);
+   }
+
+   function touchEndHandle(e: SyntheticEvent) : void {
+      e.preventDefault();
+      clearTimeout(touchTimeout.current);
+      if (isTouchEnded.current) {
+         setHasWarn(!hasWarn);
+      } else {
+         clickSquareHandle()
+      }
+      isTouchEnded.current = false;
+   }
 
 
 
@@ -284,6 +303,8 @@ const Square: React.FC<Props> = props => {
          style={getStyle()}
          onClick={clickSquareHandle}
          onContextMenu={e => rightClickSquareHandle(e)}
+         onTouchStart={e => touchStartHandle(e)}
+         onTouchEnd={e => touchEndHandle(e)}
       >
          {
             isOpen && minesAround > 0 && !hasMine ?

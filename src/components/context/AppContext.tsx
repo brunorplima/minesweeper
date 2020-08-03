@@ -13,6 +13,11 @@ export interface InfoDetails {
    openNeighbourSquare: Function
 }
 
+export interface WindowSize {
+   width: number,
+   height: number
+}
+
 interface Context {
    numberRows: number,
    setNumberRows: Function,

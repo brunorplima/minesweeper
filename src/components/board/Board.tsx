@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, ReactElement, useState } from 'react';
-import AppContext, { ContextConsumer, SquareLocation } from '../context/AppContext';
+import AppContext, { ContextConsumer, SquareLocation, WindowSize } from '../context/AppContext';
 import Square from './Square';
 import { isNull } from 'util';
 
@@ -11,8 +11,32 @@ const Board: React.FC<any> = props => {
       setMineLocations
    } = useContext(AppContext);
 
-   // const [openSquares, setOpenSquares] = useState<number | null>(null);
 
+   const screenSize = useWindowSize();
+
+   function useWindowSize() {
+      const [windowSize, setWindowSize] = useState<WindowSize>({
+         width: 0,
+         height: 0
+      })
+
+      useEffect(() => {
+         const handleResize = () => {
+            setWindowSize({
+               width: window.innerWidth,
+               height: window.innerHeight
+            })
+         }
+
+         window.addEventListener('resize', handleResize);
+
+         if (!windowSize.width || !windowSize.height) handleResize();
+
+         return () => window.removeEventListener('resize', handleResize);
+      }, [windowSize.height, windowSize.width]);
+
+      return windowSize;
+   }
 
    /**
     * Returns the id of a square
@@ -117,6 +141,7 @@ const Board: React.FC<any> = props => {
                setIsInfoListFull={props.setIsInfoListFull}
                openSquares={props.openSquares}
                setWarnSquares={props.setWarnSquares}
+               screenSize={screenSize}
             />
          );
       }

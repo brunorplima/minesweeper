@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import AppContext from './../context/AppContext'
 import Level from './Level'
 
@@ -12,49 +12,7 @@ const MainMenu: React.FC<Props> = props => {
 
    const {
       setMines
-      
    } = useContext(AppContext);
-
-
-
-   const screenSize = useWindowSize();
-
-
-
-   useEffect(() => {
-   }, []);
-
-
-
-   function useWindowSize() {
-      interface WindowSize {
-         width: number | undefined,
-         height: number | undefined
-      }
-      const [windowSize, setWindowSize] = useState<WindowSize>({
-         width: undefined,
-         height: undefined
-      })
-
-      useEffect(() => {
-         const handleResize = () => {
-            setWindowSize({
-               width: window.innerWidth,
-               height: window.innerHeight
-            })
-         }
-
-         window.addEventListener('resize', handleResize);
-
-         if (!windowSize.width || !windowSize.height) handleResize();
-
-         return () => window.removeEventListener('resize', handleResize);
-      }, [windowSize.height, windowSize.width]);
-
-      return windowSize;
-   }
-
-
 
 
    const levels = ['Easy', 'Medium', 'Expert']
