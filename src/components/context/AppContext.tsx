@@ -26,7 +26,7 @@ interface Context {
    setInfoList: Function,
    isMainMenu: boolean,
    setIsMainMenu: Function,
-   isGameOver: boolean,
+   isGameOver: {isIt: boolean, status: string},
    setIsGameOver: Function
 }
 
@@ -43,7 +43,7 @@ const context: Context = {
    setInfoList: () => {},
    isMainMenu: true,
    setIsMainMenu: () => {},
-   isGameOver: false,
+   isGameOver: {isIt: false, status: 'lost'},
    setIsGameOver: () => {}
 }
 

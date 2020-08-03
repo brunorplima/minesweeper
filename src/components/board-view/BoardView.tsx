@@ -25,9 +25,10 @@ const BoardView = () => {
    const [warnSquares, setWarnSquares] = useState(0);
 
    const timeout = useRef(setTimeout(() => '', 1));
+   const openSquares = useRef(0);
 
    useEffect(() => {
-      if (!isGameOver && !isFirstClick) {
+      if (!isGameOver.isIt && !isFirstClick) {
          timeout.current = setTimeout(() => {
             if (seconds !== 59) {
                setSeconds(seconds + 1);
@@ -38,10 +39,10 @@ const BoardView = () => {
             }
          }, 1000);
       }
-      if (isGameOver) {
+      if (isGameOver.isIt) {
          clearTimeout(timeout.current);
       }
-   }, [seconds, minutes, isGameOver, isFirstClick]);
+   }, [seconds, minutes, isGameOver.isIt, isFirstClick]);
 
 
    useEffect(() => {
@@ -57,12 +58,17 @@ const BoardView = () => {
    }
 
    function resetState() {
-      setIsGameOver(false);
+      const gameOver = {
+         isIt: false,
+         status: ''
+      }
+      setIsGameOver(gameOver);
       setIsFirstClick(true);
       setIsInfoListFull(false);
       setMineLocations([]);
       setInfoList([]);
       setWarnSquares(0);
+      openSquares.current = 0;
    }
 
 
@@ -86,9 +92,9 @@ const BoardView = () => {
    return (
       <div className='d-flex flex-column justify-content-center align-items-center'>
          {
-            isGameOver && !isMainMenu ?
+            isGameOver.isIt && !isMainMenu ?
                <div className='game-over-window'>
-                  <div>Game Over!</div>
+                  <div>{isGameOver.status === 'won' ? 'Congratulation, you WON!' : 'Game Over!'}</div>
                   <div>Time: {getTime()}</div>
                   <div className='game-over-options'>
                      <button 
@@ -134,6 +140,7 @@ const BoardView = () => {
                isInfoListFull={isInfoListFull}
                setIsInfoListFull={setIsInfoListFull}
                setWarnSquares={setWarnSquares}
+               openSquares={openSquares}
             /> : 
             null
          }
@@ -142,7 +149,7 @@ const BoardView = () => {
             <button 
                className='btn btn-primary'
                onClick={e => setNewGame(e)}
-               disabled={isGameOver || isFirstClick}
+               disabled={isGameOver.isIt || isFirstClick}
             >
                New Game
             </button>
@@ -150,7 +157,7 @@ const BoardView = () => {
             <button 
                className='btn btn-light'
                onClick={e => goToMainMenu(e)}
-               disabled={isGameOver}
+               disabled={isGameOver.isIt}
             >
                Main Menu
             </button>

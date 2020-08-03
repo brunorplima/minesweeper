@@ -16,8 +16,8 @@ interface Props {
    squaresAround: string[],
    isInfoListFull: boolean,
    setIsInfoListFull: Dispatch<SetStateAction<boolean>>,
-   openSquares: number | null,
-   setOpenSquares: Dispatch<SetStateAction<number | null>>
+   openSquares: React.MutableRefObject<number>,
+   // setOpenSquares: Dispatch<SetStateAction<number | null>>
    setWarnSquares: Dispatch<SetStateAction<number>>
 }
 
@@ -39,6 +39,23 @@ const Square: React.FC<Props> = props => {
    const [hasWarn, setHasWarn] = useState(false);
    const [bombClicked, setBombClicked] = useState(false);
    const [neighbourSquaresInfo, setNeighbourSquaresInfo] = useState<InfoDetails[]>([]);
+
+
+
+   useEffect(() => {
+      if (isOpen && !openedAdded) {
+         setOpenedAdded(true);
+         props.openSquares.current--
+      }
+      if (props.openSquares.current === 0) {
+         const gameOver = {
+            isIt: true,
+            status: 'won'
+         }
+         setIsGameOver(gameOver);
+      }
+   }, [isOpen, props.openSquares.current]);
+
 
 
 
@@ -139,8 +156,8 @@ const Square: React.FC<Props> = props => {
 
 
    useEffect(() => {
-      if (hasMine && isGameOver) setIsOpen(true);
-   }, [isGameOver, hasMine]);
+      if (hasMine && isGameOver.isIt) setIsOpen(true);
+   }, [isGameOver.isIt, hasMine]);
 
 
 
@@ -162,7 +179,7 @@ const Square: React.FC<Props> = props => {
     * Square Click handle function
     */
    function clickSquareHandle() : void {
-      if (!isGameOver && !hasWarn) {
+      if (!isGameOver.isIt && !hasWarn) {
          if (props.isFirstClick)
             props.firstClickAction(props.location, props.squaresAround)
 
@@ -171,7 +188,11 @@ const Square: React.FC<Props> = props => {
          }
 
          if (hasMine) {
-            setIsGameOver(true);
+            const gameOver = {
+               isIt: true,
+               status: 'lost'
+            } 
+            setIsGameOver(gameOver);
             setBombClicked(true);
          }
       }
@@ -186,7 +207,7 @@ const Square: React.FC<Props> = props => {
     */
    function rightClickSquareHandle(e: SyntheticEvent) : void {
       e.preventDefault();
-      if (!isGameOver && !props.isFirstClick) {
+      if (!isGameOver.isIt && !props.isFirstClick) {
          if (!isOpen) setHasWarn(!hasWarn)
       }
    }
@@ -240,7 +261,7 @@ const Square: React.FC<Props> = props => {
                   break;
             }
          }
-         if (isGameOver && hasMine) {
+         if (isGameOver.isIt && hasMine) {
             style.color = bombClicked ? 'white' : 'black'
             style.backgroundColor = bombClicked ? '#c00' : defaultBg
             style.transition = '0'
