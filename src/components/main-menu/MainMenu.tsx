@@ -71,6 +71,7 @@ const MainMenu: React.FC<Props> = props => {
                levels.map(lvl => <Level key={lvl} level={lvl} setMines={setMines} />)
             }
          </div>
+         <div>Developed By <a href='https://brunoreactdeveloper.web.app/' target='_blank' rel='noopener noreferrer'>Bruno Lima</a></div>
       </div>
    )
 }

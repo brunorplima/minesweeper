@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, SyntheticEvent } from 'react'
+import React, { useState, useEffect, useContext, SyntheticEvent, useRef } from 'react'
 import Board from '../board/Board'
 import AppContext from '../context/AppContext'
 import { FaBomb } from 'react-icons/fa'
@@ -24,11 +24,11 @@ const BoardView = () => {
    const [isInfoListFull, setIsInfoListFull] = useState(false);
    const [warnSquares, setWarnSquares] = useState(0);
 
-   let timeout: ReturnType<typeof setTimeout>;
+   const timeout = useRef(setTimeout(() => '', 1));
 
    useEffect(() => {
       if (!isGameOver && !isFirstClick) {
-         timeout = setTimeout(() => {
+         timeout.current = setTimeout(() => {
             if (seconds !== 59) {
                setSeconds(seconds + 1);
             }
@@ -39,7 +39,7 @@ const BoardView = () => {
          }, 1000);
       }
       if (isGameOver) {
-         clearTimeout(timeout);
+         clearTimeout(timeout.current);
       }
    }, [seconds, minutes, isGameOver, isFirstClick]);
 
@@ -72,7 +72,7 @@ const BoardView = () => {
       setRenewGame(true);
       setMinutes(0);
       setSeconds(0);
-      clearTimeout(timeout);
+      clearTimeout(timeout.current);
    }
 
 

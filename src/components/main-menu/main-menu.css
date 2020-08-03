@@ -4,6 +4,15 @@
    color: white;
 }
 
+a {
+   font-weight: bold;
+   color: white !important;
+   text-decoration: underline !important;
+}
+a:hover {
+   text-decoration: none !important;
+}
+
 
 /* Game Name */
 .game-name {
