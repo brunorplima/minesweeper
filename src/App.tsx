@@ -13,7 +13,7 @@ const App = () => {
    const [mineLocations, setMineLocations]   = useState([]);
    const [infoList, setInfoList]             = useState([]);
    const [isMainMenu, setIsMainMenu]         = useState(true);
-   const [isGameOver, setIsGameOver]         = useState({isIt: false, status: 'lost'});
+   const [isGameOver, setIsGameOver]         = useState({isIt: false, status: ''});
 
    return (
       <ContextProvider value={{

@@ -48,7 +48,7 @@ const context: Context = {
    setInfoList: () => {},
    isMainMenu: true,
    setIsMainMenu: () => {},
-   isGameOver: {isIt: false, status: 'lost'},
+   isGameOver: {isIt: false, status: ''},
    setIsGameOver: () => {}
 }
 

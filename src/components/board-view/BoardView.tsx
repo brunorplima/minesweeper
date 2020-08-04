@@ -3,6 +3,7 @@ import Board from '../board/Board'
 import AppContext from '../context/AppContext'
 import { FaBomb } from 'react-icons/fa'
 import { GrFormClose } from 'react-icons/gr'
+import { WON } from '../../constants/constants'
 
 import './board-view.css'
 
@@ -152,7 +153,7 @@ const BoardView = () => {
          {
             isGameOver.isIt && !isMainMenu ?
                <div className='game-over-window'>
-                  <div>{isGameOver.status === 'won' ? 'Congratulation, you WON!' : 'Game Over!'}</div>
+                  <div>{isGameOver.status === WON ? 'Congratulation, you WON!' : 'Game Over!'}</div>
                   <div>Time: {getTime()}</div>
                   <div className='game-over-options'>
                      <button 

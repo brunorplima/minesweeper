@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, SyntheticEvent, Dispatch, SetSt
 import AppContext, { InfoDetails, SquareLocation, WindowSize } from '../context/AppContext';
 import { TiFlag } from 'react-icons/ti'
 import { FaBomb } from 'react-icons/fa'
+import { WON, LOST } from '../../constants/constants'
 
 import './square.css';
 
@@ -48,11 +49,11 @@ const Square: React.FC<Props> = props => {
       if (props.openSquares.current === 0) {
          const gameOver = {
             isIt: true,
-            status: 'won'
+            status: WON
          }
          setIsGameOver(gameOver);
       }
-   }, [isOpen, props.openSquares.current]);
+   }, [isOpen]);
 
 
 
@@ -188,7 +189,7 @@ const Square: React.FC<Props> = props => {
          if (hasMine) {
             const gameOver = {
                isIt: true,
-               status: 'lost'
+               status: LOST
             } 
             setIsGameOver(gameOver);
             setBombClicked(true);
