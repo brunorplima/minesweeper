@@ -1,18 +1,28 @@
 .level-container {
    background-color: #666;
-   border-radius: .25rem;
+   border-radius: 2rem !important;
    margin-bottom: 2rem;
    cursor: pointer;
    transition: .4s;
+   width: 100%;
+   height: 100%;
 }
 
 .level-img {
-   height: 3rem;
+   height: 4rem;
+   background-size: cover;
+   background-position: center;
+   border-top-left-radius: .25rem;
+   border-top-right-radius: .25rem;
+}
+.level-img img {
+   width: 100%;
 }
 
 .level-description {
    padding: .3rem 1rem;
-   border-radius: .25rem;
+   border-bottom-left-radius: .25rem;
+   border-bottom-right-radius: .25rem;
 }
 .level-description div {
    font-size: 10pt;
