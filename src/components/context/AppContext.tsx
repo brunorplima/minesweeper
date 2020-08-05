@@ -18,6 +18,18 @@ export interface WindowSize {
    height: number
 }
 
+export interface GameOver {
+   isIt: boolean,
+   status: string
+}
+
+export interface TimeRecord {
+   name: string,
+   minute: number,
+   second: number,
+   date: Date
+}
+
 interface Context {
    numberRows: number,
    setNumberRows: Function,
@@ -32,7 +44,9 @@ interface Context {
    isMainMenu: boolean,
    setIsMainMenu: Function,
    isGameOver: {isIt: boolean, status: string},
-   setIsGameOver: Function
+   setIsGameOver: Function,
+   easyTimeRecords: TimeRecord[],
+   setEasyTimeRecords: Function
 }
 
 const context: Context = {
@@ -49,7 +63,9 @@ const context: Context = {
    isMainMenu: true,
    setIsMainMenu: () => {},
    isGameOver: {isIt: false, status: ''},
-   setIsGameOver: () => {}
+   setIsGameOver: () => {},
+   easyTimeRecords: [],
+   setEasyTimeRecords: () => {}
 }
 
 const AppContext = createContext<Context>(context);

@@ -36,3 +36,57 @@ a:hover {
 .difficulty:last-child {
    margin-bottom: 0 !important;
 }
+
+
+
+.records-button {
+   border-radius: 2.5rem;
+   font-size: 1.3rem;
+   color: #FFD700;
+   padding: .6rem;
+   background-color: #666;
+   cursor: pointer;
+}
+
+
+.records-container {
+   padding: 1.5rem;
+   background-color: #222;
+   margin-top: 1rem;
+   position: relative;
+}
+.records-container span {
+   font-size: .7rem;
+}
+
+.close-records {
+   position: absolute;
+   top: .5rem;
+   right: 1rem;
+   color: white !important;
+   font-size: 18pt;
+   cursor: pointer;
+}
+
+.record-position {
+   flex-basis: 10%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-right: .3rem;
+   min-width: fit-content;
+}
+
+.record-user-name {
+   flex-basis: 70%;
+}
+
+.record-time {
+   flex-basis: 20%;
+}
+
+.record-date {
+   font-size: .8rem;
+   flex-basis: 15%;
+
+}
