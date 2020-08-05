@@ -219,13 +219,13 @@ const Square: React.FC<Props> = props => {
       e.preventDefault();
       touchTimeout.current = setTimeout(() => {
          isTouchEnded.current = true;
-      }, 500);
+      }, 300);
    }
 
    function touchEndHandle(e: SyntheticEvent) : void {
       e.preventDefault();
       clearTimeout(touchTimeout.current);
-      if (isTouchEnded.current) {
+      if (isTouchEnded.current && !props.isFirstClick) {
          setHasWarn(!hasWarn);
       } else {
          clickSquareHandle()
