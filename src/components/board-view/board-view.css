@@ -26,12 +26,14 @@
    border-radius: .4rem;
    background-color: black;
    color: white;
+   user-select: none;
 }
 
 .top-menu .remaining-bombs {
    background-color: white;
    border-radius: .4rem;
    padding: .3rem;
+   user-select: none;
 }
 
 .help-window {
@@ -67,6 +69,7 @@
    padding: .3rem;
    border-radius: .4rem;
    cursor: pointer;
+   user-select: none;
 }
 
 
