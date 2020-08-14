@@ -1,15 +1,14 @@
-import React, { useContext, useState, useEffect } from 'react'
-import AppContext, { TimeRecord } from './../context/AppContext'
+import React, { useContext, useState } from 'react'
+import AppContext from './../context/AppContext'
 import Level from './Level'
 import { GiTrophy } from 'react-icons/gi'
 import { RiCloseLine } from 'react-icons/ri'
-import db from '../../firebase/firebase'
-import { EASY } from '../../constants/constants'
+import { EASY, MEDIUM, EXPERT } from '../../constants/constants'
 
 import './main-menu.css'
 
 interface Props {
-   
+   sortRecords: Function
 }
 
 const MainMenu: React.FC<Props> = props => {
@@ -17,68 +16,25 @@ const MainMenu: React.FC<Props> = props => {
    const {
       setMines,
       easyTimeRecords,
-      setEasyTimeRecords
+      mediumTimeRecords,
+      expertTimeRecords
    } = useContext(AppContext);
 
    const [isRecordsOpen, setIsRecordsOpen] = useState(false);
    const [recordsClicked, setRecordsClicked] = useState(false);
-   const [loading, setLoading] = useState(true);
-
-   setEasyTimeRecords(useEasyCollectionHook())
+   const [diffLevel, setDiffLevel] = useState(EASY);
 
 
-
-
-
-   // useEffect(() => {
-   //    db.collection(EASY).add({
-   //       name: 'Ludmila',
-   //       minutes: 4,
-   //       seconds: 19,
-   //       date: Date.now()
-   //    })
-      
-   // }, []);
-
-
-
-
-
-   function useEasyCollectionHook() {
-      const [easyRecords, setEasyRecords] = useState<TimeRecord[]>([]);
-
-      useEffect(() => {
-         async function fetchData() {
-            try {
-               if (isRecordsOpen && easyTimeRecords.length === 0) {
-                  let records: TimeRecord[] = [];
-
-                  await db.collection(EASY).get().then(snapshot => {
-                     records = snapshot.docs.map((doc, i) => {
-                        const record: TimeRecord = {
-                           name: doc.data().name,
-                           second: doc.data().seconds,
-                           minute: doc.data().minutes,
-                           date: doc.data().date
-                        }
-                        return record;
-                     });
-                  })
-                  setEasyRecords(sortRecords(records).filter((rec, i) => i < 10));
-               }
-            }
-            catch(error) {
-               console.error('FIREBASE DB ERROR:', error.message);
-            }
-         }
-
-         if (!easyRecords.length) fetchData();
-      }, [easyRecords, isRecordsOpen, easyTimeRecords.length]);
-
-      return easyRecords;
+   function getSelectedCollection() {
+      switch(diffLevel) {
+         case EASY:
+            return easyTimeRecords;
+         case MEDIUM:
+            return mediumTimeRecords;
+         default:
+            return expertTimeRecords;
+      }
    }
-
-
 
 
 
@@ -89,29 +45,9 @@ const MainMenu: React.FC<Props> = props => {
    }
 
 
-   function sortRecords(records: TimeRecord[]) : TimeRecord[] {
-      const firstSort = records.sort((a, b) => a.minute - b.minute)
-      const secondSort: Array<Array<TimeRecord>> = [];
-      const finalSort: TimeRecord[] = [];
-      let arrCount = -1;
-      for (let i = 0; i < firstSort.length; i++) {
-         if (!i || firstSort[i].minute !== firstSort[i - 1].minute) {
-            secondSort.push([]);
-            arrCount++;
-         }
-         secondSort[arrCount].push(firstSort[i]);
-      }
-      secondSort.forEach(rec => {
-         const recs = rec.sort((a, b) => a.second - b.second)
-         finalSort.push(...recs);
-      });
-      return finalSort;
-   }
-
-
 
    function getRemainingPositions() {
-      const until = easyTimeRecords.length;
+      const until = getSelectedCollection().length;
       if (until < 10) {
          const remaining = [];
          for (let pos = until + 1; pos <= 10; pos++) {
@@ -119,7 +55,7 @@ const MainMenu: React.FC<Props> = props => {
                <div key={pos} className='p-record d-flex'>
                   <div className='record-position' style={{color: getPositionColor(pos)}}>
                      {
-                        pos <= 2 ?
+                        pos <= 3 ?
                            <GiTrophy /> :
                            pos
                      }
@@ -158,7 +94,7 @@ const MainMenu: React.FC<Props> = props => {
    }
 
 
-   const levels = ['Easy', 'Medium', 'Expert']
+   const levels = [EASY, MEDIUM, EXPERT]
 
    return (
       <div className='main-menu-container'>
@@ -175,10 +111,14 @@ const MainMenu: React.FC<Props> = props => {
                </div>
 
                <h2>Records</h2>
-               <span>In development</span>
+               <div className='d-flex'>
+                  <div className={diffLevel === EASY ? 'tab easy-tab p-1 selected-tab' : 'tab easy-tab p-1'} onClick={() => setDiffLevel(EASY)}>Easy</div>
+                  <div className={diffLevel === MEDIUM ? 'tab medium-tab p-1 selected-tab' : 'tab medium-tab p-1'} onClick={() => setDiffLevel(MEDIUM)}>Medium</div>
+                  <div className={diffLevel === EXPERT ? 'tab expert-tab p-1 selected-tab' : 'tab expert-tab p-1'} onClick={() => setDiffLevel(EXPERT)}>Expert</div>
+               </div>
                <div className='positions'>
                   {
-                     easyTimeRecords.map((record, i) => {
+                     getSelectedCollection().map((record, i) => {
                         return (
                            <div key={i} className='p-record d-flex'>
                               <div className='record-position' style={{color: getPositionColor(i + 1)}}>
@@ -196,7 +136,7 @@ const MainMenu: React.FC<Props> = props => {
                                  }
                               </div>
                               <div className='record-time'>
-                                 {getTime(record.minute, record.second)}
+                                 {getTime(record.minutes, record.seconds)}
                               </div>
                               {/* <div className='record-date d-flex justify-content-center align-items-end'>
                                  {`${record.date.getMonth()}-${record.date.getFullYear()}`}
@@ -206,7 +146,7 @@ const MainMenu: React.FC<Props> = props => {
                      })
                   }
                   {
-                     easyTimeRecords.length ? getRemainingPositions() : null
+                     getRemainingPositions()
                   }
                </div>
             </div>
