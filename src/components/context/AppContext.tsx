@@ -45,8 +45,14 @@ interface Context {
    setIsMainMenu: Function,
    isGameOver: {isIt: boolean, status: string},
    setIsGameOver: Function,
+   level: string,
+   setLevel: Function,
    easyTimeRecords: TimeRecord[],
-   setEasyTimeRecords: Function
+   setEasyTimeRecords: Function,
+   mediumTimeRecords: TimeRecord[],
+   setMediumTimeRecords: Function,
+   expertTimeRecords: TimeRecord[],
+   setExpertTimeRecords: Function
 }
 
 const context: Context = {
@@ -64,8 +70,14 @@ const context: Context = {
    setIsMainMenu: () => {},
    isGameOver: {isIt: false, status: ''},
    setIsGameOver: () => {},
+   level: '',
+   setLevel: () => {},
    easyTimeRecords: [],
-   setEasyTimeRecords: () => {}
+   setEasyTimeRecords: () => {},
+   mediumTimeRecords: [],
+   setMediumTimeRecords: () => {},
+   expertTimeRecords: [],
+   setExpertTimeRecords: () => {}
 }
 
 const AppContext = createContext<Context>(context);

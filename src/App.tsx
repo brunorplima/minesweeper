@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ContextProvider } from './components/context/AppContext';
 import Game from './components/Game';
-import db from './firebase/firebase'
 import { EASY } from './constants/constants'
 import { TimeRecord, InfoDetails, GameOver } from './components/context/AppContext'
 
@@ -18,6 +17,9 @@ const App = () => {
    const [isMainMenu, setIsMainMenu]               = useState(true);
    const [isGameOver, setIsGameOver]               = useState<GameOver>({isIt: false, status: ''});
    const [easyTimeRecords, setEasyTimeRecords]     = useState<TimeRecord[]>([]);
+   const [mediumTimeRecords, setMediumTimeRecords] = useState<TimeRecord[]>([]);
+   const [expertTimeRecords, setExpertTimeRecords] = useState<TimeRecord[]>([]);
+   const [level, setLevel]                         = useState<string>(EASY);
 
    return (
       <ContextProvider value={{
@@ -35,8 +37,14 @@ const App = () => {
          setIsMainMenu,
          isGameOver,
          setIsGameOver,
+         level,
+         setLevel,
          easyTimeRecords,
-         setEasyTimeRecords
+         setEasyTimeRecords,
+         mediumTimeRecords,
+         setMediumTimeRecords,
+         expertTimeRecords,
+         setExpertTimeRecords
          }}>
          <div className="App">
             <Game />
