@@ -51,7 +51,7 @@ const GameOverWindow : React.FC<Props> = props => {
                <div>You did very well!</div>
                <div>You got yourself at the {getPositionString()} best time</div>
                <div className='d-flex flex-column align-items-center'>
-                  <input type='text' onChange={e => props.handleNameChange(e)}/>
+                  <input type='text' onChange={e => props.handleNameChange(e)} placeholder='Name'/>
                   <input type='submit' onClick={e => onSubmit(e)} value='Submit'/>
                </div>
             </form> :

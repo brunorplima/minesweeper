@@ -90,3 +90,8 @@
 .bottom-menu {
    margin-top: .5rem;
 }
+
+input[type="text"] {
+   padding: .3rem;
+   margin: .4rem 0
+}
