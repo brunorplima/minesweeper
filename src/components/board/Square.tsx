@@ -198,7 +198,7 @@ const Square: React.FC<Props> = props => {
          if (hasWarn) props.setWarnSquares(prevState => prevState + 1)
          else props.setWarnSquares(prevState => prevState - 1)
       }
-   }, [hasWarn, props]);
+   }, [hasWarn]);
    
 
 
