@@ -25,9 +25,9 @@ export interface GameOver {
 
 export interface TimeRecord {
    name: string,
-   minute: number,
-   second: number,
-   date: Date
+   minutes: number,
+   seconds: number,
+   date: number
 }
 
 interface Context {
