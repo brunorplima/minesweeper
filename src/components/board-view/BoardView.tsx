@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useContext, SyntheticEvent, useRef } from 'react'
 import Board from '../board/Board'
-import AppContext from '../context/AppContext'
+import AppContext, { TimeRecord } from '../context/AppContext'
 import { FaBomb } from 'react-icons/fa'
-import { GrFormClose } from 'react-icons/gr'
-import { WON } from '../../constants/constants'
+import { WON, EASY, MEDIUM } from '../../constants/constants'
+import GameOverWindow from './GameOverWindow'
+import HelpWindow from './HelpWindow'
 
 import './board-view.css'
+import { addToDatabase, sortRecords } from '../../firebase/firebase'
 
-const BoardView = () => {
+const BoardView: React.FC<any> = props => {
 
    const {
       isGameOver,
@@ -16,7 +18,11 @@ const BoardView = () => {
       setIsMainMenu,
       setMineLocations,
       setInfoList,
-      mines
+      mines,
+      easyTimeRecords,
+      mediumTimeRecords,
+      expertTimeRecords,
+      level
    } = useContext(AppContext);
 
    const [seconds, setSeconds] = useState(0);
@@ -27,9 +33,28 @@ const BoardView = () => {
    const [warnSquares, setWarnSquares] = useState(0);
    const [openConfirm, setOpenConfirm] = useState({isIt: false, type: ''});
    const [openHelp, setOpenHelp] = useState(false);
+   const [isRecord, setIsRecord] = useState(false);
+   const [name, setName] = useState('');
 
    const timeout = useRef(setTimeout(() => '', 1));
-   const openSquares = useRef(0);
+   const openSquares = useRef(-1);
+
+   /**
+    * When the game is over and the player won sets the isRecord state which will tell if the time is a new record
+    */
+   useEffect(() => {
+      if (isGameOver.isIt && isGameOver.status === WON) {
+         const newRecord: TimeRecord = {
+            name: '',
+            seconds,
+            minutes,
+            date: Date.now()
+         }
+         setIsRecord(props.isNewRecord(getLevelRecords(), newRecord));
+      }
+   }, [isGameOver.isIt, isGameOver.status]);
+
+
 
    useEffect(() => {
       if (!isGameOver.isIt && !isFirstClick) {
@@ -55,11 +80,41 @@ const BoardView = () => {
 
 
 
+   function getLevelRecords() {
+      switch(level) {
+         case EASY:
+            return easyTimeRecords
+         case MEDIUM:
+            return mediumTimeRecords;
+         default:
+            return expertTimeRecords;
+      }
+   }
+
+
+
    function getTime() {
       const sec = seconds < 10 ? `0${seconds}` : `${seconds}`;
       const min = minutes < 10 ? `0${minutes}` : `${minutes}`;
       return `${min}:${sec}`;
    }
+
+
+   function getPosition() {
+      const newRecord: TimeRecord = {
+         name: '',
+         seconds,
+         minutes,
+         date: Date.now()
+      }
+      const records = sortRecords(getLevelRecords().concat(newRecord));
+      let position = 0;
+      records.forEach((val, i) => {
+         if (val.date === newRecord.date) position = i + 1;
+      })
+      return position;
+   }
+
 
    function resetState() {
       const gameOver = {
@@ -72,7 +127,7 @@ const BoardView = () => {
       setMineLocations([]);
       setInfoList([]);
       setWarnSquares(0);
-      openSquares.current = 0;
+      openSquares.current = -1;
    }
 
 
@@ -125,54 +180,45 @@ const BoardView = () => {
    }
 
 
+   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+      e.preventDefault();
+      setName(e.target.value);
+   }
+
+
+   function handleOnClick(e: SyntheticEvent) {
+      e.preventDefault();
+      const date = Date.now();
+      const record: TimeRecord = {
+         name,
+         seconds,
+         minutes,
+         date
+      }
+      if (getLevelRecords().length >= 10) addToDatabase(level, record);
+      else addToDatabase(level, record);
+      setIsRecord(false);
+   }
+
+
    return (
       <div className='d-flex flex-column justify-content-center align-items-center'>
          {
             !isGameOver.isIt && openHelp &&
-            <div className='help-window'>
-               <div className='close-window' onClick={e => setOpenHelp(false)}>
-                  <GrFormClose style={{color:'white'}}/>
-               </div>
-               <div className='hw-mobile'>
-                  <div>Mobile:</div>
-                  <div> - Touch to open a square</div>
-                  <div> - Touch and hold to flag a square</div>
-               </div>
-               <div className='hw-desktop'>
-                  <div>Desktop:</div>
-                  <div> - Left-click to open a square</div>
-                  <div> - Right-click to flag a square</div>
-               </div>
-               <div>Goal: Open all squares without opening a square with a bomb in it. Once all non-bomb squares are opened you win the game. Open a square with a bomb in it and you lose the game.</div>
-               <div>The numbered squares mean there is/are that many bomb/bombs within the 8 squares around them.</div>
-               <div>Use the flags to warn yourself that you found out that a given square has a bomb in it.</div>
-               <div>Have fun!</div>
-            </div>
+            <HelpWindow setOpenHelp={setOpenHelp} />
          }
 
          {
             isGameOver.isIt && !isMainMenu ?
-               <div className='game-over-window'>
-                  <div>{isGameOver.status === WON ? 'Congratulation, you WON!' : 'Game Over!'}</div>
-                  <div>Time: {getTime()}</div>
-                  <div className='game-over-options'>
-                     <button 
-                        className='btn btn-primary'
-                        onClick={e => setNewGame(e)}
-                     >
-                        New Game
-                     </button>
-
-                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                     <button 
-                        className='btn btn-light'
-                        onClick={e => goToMainMenu(e)}
-                     >
-                        Main Menu
-                     </button>
-                  </div>
-               </div> :
+               <GameOverWindow 
+                  getTime={getTime}
+                  handleNameChange={handleNameChange}
+                  handleOnClick={handleOnClick}
+                  setNewGame={setNewGame}
+                  goToMainMenu={goToMainMenu}
+                  isRecord={isRecord}
+                  getPosition={getPosition}
+               /> :
                null
          }
 

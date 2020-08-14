@@ -157,7 +157,7 @@ const Board: React.FC<any> = props => {
       for (let i = 0; i < numberCols; i++) {
          rows.push(buildRow(i));
       }
-      if (!props.openSquares.current) props.openSquares.current = numberRows * numberCols - mines;
+      if (props.openSquares.current === -1) props.openSquares.current = numberRows * numberCols - mines;
       return rows;
    }
 
