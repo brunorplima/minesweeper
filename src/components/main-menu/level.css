@@ -1,6 +1,6 @@
 .level-container {
    background-color: #666;
-   border-radius: 2rem !important;
+   border-radius: .25rem;
    margin-bottom: 2rem;
    cursor: pointer;
    transition: .4s;
