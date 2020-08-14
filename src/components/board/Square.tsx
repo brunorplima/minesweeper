@@ -60,7 +60,7 @@ const Square: React.FC<Props> = props => {
          
          if (props.openSquares.current === 0 && !hasMine) {
             setIsGameOver(gameOver);
-         } else if (hasMine) {
+         } else if (props.openSquares.current === 0 && hasMine) {
             gameOver.status = LOST
             setIsGameOver(gameOver);
          }
@@ -133,9 +133,9 @@ const Square: React.FC<Props> = props => {
     *    d) optional: the adjacent square does not have a bomb in it
     */
    useEffect(() => {
-      if (isOpen && !hasMine) {
+      if (isOpen && !hasMine && minesAround === 0) {
          neighbourSquaresInfo.forEach(inf => {
-            if (!inf.hasBomb && minesAround === 0) {
+            if (!inf.hasBomb) {
                inf.openNeighbourSquare();
             }
          })
@@ -198,7 +198,7 @@ const Square: React.FC<Props> = props => {
          if (hasWarn) props.setWarnSquares(prevState => prevState + 1)
          else props.setWarnSquares(prevState => prevState - 1)
       }
-   }, [hasWarn]);
+   }, [hasWarn, props]);
    
 
 
