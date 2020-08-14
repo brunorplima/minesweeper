@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import AppContext from '../context/AppContext'
 import { FaBomb } from 'react-icons/fa'
+import { EASY, MEDIUM, EXPERT } from '../../constants/constants'
 import mountain from '../../images/mountain.jpg'
 import paradise from '../../images/paradise.jpg'
 import sunset from '../../images/sunset.jpg'
@@ -15,22 +16,26 @@ interface Props {
 const Level : React.FC<Props> = props => {
 
    const {
-      setIsMainMenu
+      setIsMainMenu,
+      setLevel
    } = useContext(AppContext);
 
    function clickHandler() {
       switch (props.level) {
-         case 'Easy':
+         case EASY:
             props.setMines(20);
             setIsMainMenu(false);
+            setLevel(EASY);
             break;
-         case 'Medium':
+         case MEDIUM:
             props.setMines(30);
             setIsMainMenu(false);
+            setLevel(MEDIUM);
             break;
-         case 'Expert':
+         case EXPERT:
             props.setMines(40);
             setIsMainMenu(false);
+            setLevel(EXPERT);
             break;
       }
    }
@@ -39,17 +44,17 @@ const Level : React.FC<Props> = props => {
    let bgColor = '#D0359A', minesNumber = 0, image = '';
 
    switch (props.level) {
-      case 'Easy':
+      case EASY:
          bgColor = '#59a843';
          minesNumber = 20;
          image = `url(${mountain})`;
          break;
-      case 'Medium':
+      case MEDIUM:
          bgColor = '#EAAD14';
          minesNumber = 30;
          image = `url(${paradise})`;
          break;
-      case 'Expert':
+      case EXPERT:
          bgColor = '#e05d16';
          minesNumber = 40;
          image = `url(${sunset})`;
