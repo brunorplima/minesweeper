@@ -40,24 +40,38 @@ const Square: React.FC<Props> = props => {
    const [neighbourSquaresInfo, setNeighbourSquaresInfo] = useState<InfoDetails[]>([]);
 
 
-
+   /**
+    * All cases only occurres if the square is open
+    * 1. Sets openedAdded and decrease by one props.openSquares
+    * 2. If this square doesn't have bomb and props.openSquares is equal to zero, sets gameOver to true with status WON
+    * 3. if this square hasBomb sets gameOver to true with status LOST
+    */
    useEffect(() => {
-      if (isOpen && !openedAdded) {
-         setOpenedAdded(true);
-         props.openSquares.current--
-      }
-      if (props.openSquares.current === 0) {
+      if (isOpen) {
+         if (!openedAdded) {
+            setOpenedAdded(true);
+            props.openSquares.current--
+         }
+
          const gameOver = {
             isIt: true,
             status: WON
          }
-         setIsGameOver(gameOver);
+         
+         if (props.openSquares.current === 0 && !hasMine) {
+            setIsGameOver(gameOver);
+         } else if (hasMine) {
+            gameOver.status = LOST
+            setIsGameOver(gameOver);
+         }
       }
    }, [isOpen]);
 
 
 
-
+   /**
+    * Populate the infoList array to be used later on
+    */
    useEffect(() => {
       const list = infoList;
       const info = {
@@ -79,7 +93,9 @@ const Square: React.FC<Props> = props => {
 
 
 
-
+   /**
+    * Set isInfoListFull to true in order to run the next useEffect
+    */
    useEffect(() => {
       if (infoList.length === numberCols * numberRows) {
          props.setIsInfoListFull(true);
@@ -90,7 +106,10 @@ const Square: React.FC<Props> = props => {
 
 
 
-
+   /**
+    * Set the list which holds the information and open functionality of the squares around
+    * This is going to be used to open squares around if this square has no bomb around
+    */
    useEffect(() => {
       if (props.isInfoListFull) {
          const infos : InfoDetails[] = [];
@@ -106,7 +125,13 @@ const Square: React.FC<Props> = props => {
 
 
 
-
+   /**
+    * Open squares around if:
+    *    a) this square was opened
+    *    b) this square does not have a bomb
+    *    c) this square does not have bomb around it
+    *    d) optional: the adjacent square does not have a bomb in it
+    */
    useEffect(() => {
       if (isOpen && !hasMine) {
          neighbourSquaresInfo.forEach(inf => {
@@ -137,7 +162,10 @@ const Square: React.FC<Props> = props => {
 
 
 
-
+   /**
+    * Place bomb in this square if its id is included within mineLocations array
+    * Sets the number of bombs around
+    */
    useEffect(() => {
       mineLocations.forEach(loc => {
          if (loc === props.id) setHasMine(true)
@@ -153,14 +181,18 @@ const Square: React.FC<Props> = props => {
 
 
 
-
+   /**
+    * Open all squares with bombs if the game is over
+    */
    useEffect(() => {
       if (hasMine && isGameOver.isIt) setIsOpen(true);
    }, [isGameOver.isIt, hasMine]);
 
 
 
-
+   /**
+    * Increase or decrease the number of flagged squares
+    */
    useEffect(() => {
       if (!props.isFirstClick) {
          if (hasWarn) props.setWarnSquares(prevState => prevState + 1)
