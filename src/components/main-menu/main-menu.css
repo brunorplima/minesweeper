@@ -91,3 +91,24 @@ a:hover {
    flex-basis: 15%;
 
 }
+
+
+.positions {
+   background-color: #444;
+   padding: .3rem;
+}
+
+
+
+/* LEVEL TABS */
+.tab {
+   background-color: #666;
+   cursor: pointer;
+   user-select: none;
+   margin-right: 3px;
+   border-top-right-radius: .3rem;
+   border-top-left-radius: .3rem;
+}
+.selected-tab {
+   background-color: #444;
+}
