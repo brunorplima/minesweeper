@@ -45,8 +45,7 @@ const GameOverWindow : React.FC<Props> = props => {
          <div>Time: {props.getTime()}</div>
 
          {
-            props.isRecord && isGameOver.status === WON &&
-            !hideForm ?
+            props.isRecord && isGameOver.status === WON && !hideForm ?
             <form>
                <div>You did very well!</div>
                <div>You got yourself at the {getPositionString()} best time</div>
@@ -55,6 +54,7 @@ const GameOverWindow : React.FC<Props> = props => {
                   <input type='submit' onClick={e => onSubmit(e)} value='Submit'/>
                </div>
             </form> :
+            isGameOver.status === WON && !hideForm &&
             <div>
                <div>Added to top time list</div>
             </div>
