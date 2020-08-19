@@ -131,7 +131,7 @@ const MainMenu: React.FC<Props> = props => {
                               <div className='record-user-name'>
                                  {
                                     record.name.length > 15 ?
-                                    record.name.substring(0, 15) + '...' :
+                                    record.name.substring(0, 18) + '...' :
                                     record.name
                                  }
                               </div>
