@@ -2,14 +2,14 @@ import firebase from 'firebase'
 import { TimeRecord } from '../components/context/AppContext'
 
 const firebaseConfig = {
-   apiKey: process.env.API_KEY,
-   authDomain: process.env.AUTH_DOMAIN,
-   databaseURL: process.env.DATABASE_URL,
+   apiKey: process.env.REACT_APP_API_KEY,
+   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+   databaseURL: process.env.REACT_APP_DATABASE_URL,
    projectId: 'brunosminesweeper',
-   storageBucket: process.env.STORAGE_BUCKET,
-   messagingSenderId: process.env.MESSAGING_SENDER_ID,
-   appId: process.env.APP_ID,
-   measurementId: process.env.MEASUREMENT_ID
+   storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+   appId: process.env.REACT_APP_APP_ID,
+   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 }
 
 firebase.initializeApp(firebaseConfig);
@@ -21,6 +21,9 @@ const db = firebase.firestore();
 
 export default db;
 
+console.log(process.env.API_KEY);
+export const analytics = firebase.analytics();
+analytics.logEvent(firebase.analytics.EventName.PAGE_VIEW, {key:'ms',page_title:'Brunos minesweeper',page_location:'/',page_path:'/'});
 
 export function createTimeRecord(name: string, seconds: number, minutes: number, date: number) : TimeRecord {
    return {
